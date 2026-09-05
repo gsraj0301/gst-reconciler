@@ -168,30 +168,7 @@ pyinstaller GST-Reconciler.spec --clean
 
 Output: `dist/GST-Reconciler.exe` (~66 MB)
 
-## Security note
-
-The login password is **not hardcoded** in the source. Instead:
-
-1. A `.env.example` file is tracked in the repo — copy it to `.env` and set your own password:
-   ```bash
-   cp .env.example .env
-   # then edit .env and set GST_RECONCILER_PASSWORD=your_password
-   ```
-2. At runtime the app reads `GST_RECONCILER_PASSWORD` from the environment
-3. If the variable is not set, the app refuses to start and shows a helpful error message
-
-Do **not** commit real passwords to the repo. The `.env` file should be listed in `.gitignore` (it is already).
-
-## License
-
-This project is available for **internal / personal use**. A permissive MIT‑style license is included in the repo for convenience; modify or replace it to match your organization's policy.
-
----
 
 ### Contributing
 
-Pull requests are welcome. For major changes, please open an issue first to discuss what you’d like to change.
-
-### Contact
-
-Built with Python, Tkinter, and openpyxl. Maintained for GST compliance automation.
+For major changes, please open an issue first to discuss what you’d like to change.
