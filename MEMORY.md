@@ -16,7 +16,8 @@ Desktop app that reconciles a Tally Voucher Register against GSTR-2B data, flags
 ## Final State
 
 - Branch: `main`
-- Latest commit: `c38ddd1 docs: mark release phases complete`
+- Release commit: `4274946 Remove login gate; add tests, sample data, and release workflow`
+- Final delivery docs commit: `c38ddd1 docs: mark release phases complete`
 - Release tag: `v1.0.0`
 - Release: https://github.com/gsraj0301/gst-reconciler/releases/tag/v1.0.0
 - Asset: https://github.com/gsraj0301/gst-reconciler/releases/download/v1.0.0/GST-Reconciler.exe
