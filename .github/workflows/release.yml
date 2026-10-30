@@ -1,0 +1,40 @@
+name: release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Build executable
+        run: pyinstaller GST-Reconciler.spec --clean
+
+      - name: Publish release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/GST-Reconciler.exe
+          body: |
+            GST Reconciler ${{ github.ref_name }}
+
+            - Reconciles Tally purchase registers against GSTR-2B.
+            - Flags both matched statuses, nine mismatch categories, and duplicates.
+            - Exports a color-coded Excel report while preserving the original sheets.

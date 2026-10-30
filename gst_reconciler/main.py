@@ -8,7 +8,6 @@ import sys
 from .parser import parse_tally_file, parse_gstr2b_file
 from .matcher import match_rows, get_summary
 from .writer import write_reconciliation_report
-from .ui.login import LoginFrame
 from .ui.upload import UploadFrame
 from .ui.results import ResultsFrame
 from .ui.detail import DetailFrame
@@ -26,14 +25,6 @@ class GSTReconcilerApp(TkinterDnD.Tk):
         self.summary = {}
         self.output_filepath = None
         
-        self.show_login()
-    
-    def show_login(self):
-        self.clear_window()
-        self.login_frame = LoginFrame(self, self.on_login_success)
-        self.login_frame.pack(fill="both", expand=True)
-    
-    def on_login_success(self):
         self.show_upload()
     
     def show_upload(self):

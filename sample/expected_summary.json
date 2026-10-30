@@ -1,0 +1,19 @@
+{
+  "tally_rows": 11,
+  "gstr2b_rows": 11,
+  "result_rows": 13,
+  "summary": {
+    "Matched": 3,
+    "Matched (Amount Verified)": 1,
+    "In Tally but not in GSTR-2B": 1,
+    "In GSTR-2B but not in Tally": 1,
+    "Invoice Value Mismatch": 1,
+    "Taxable Value Mismatch": 1,
+    "Integrated Tax Mismatch": 1,
+    "Central Tax Mismatch": 1,
+    "State/UT Tax Mismatch": 1,
+    "Duplicate in Tally": 1,
+    "Duplicate in GSTR-2B": 1
+  },
+  "generated_report": "reconciliation-report.xlsx"
+}

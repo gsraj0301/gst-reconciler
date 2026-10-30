@@ -17,6 +17,29 @@ class MatchResult:
 
 THRESHOLD = 10.0
 
+MATCHED_STATUSES = (
+    "Matched",
+    "Matched (Amount Verified)",
+)
+
+VALUE_MISMATCH_CATEGORIES = (
+    "Invoice Value Mismatch",
+    "Taxable Value Mismatch",
+    "Integrated Tax Mismatch",
+    "Central Tax Mismatch",
+    "State/UT Tax Mismatch",
+)
+
+MISMATCH_CATEGORIES = (
+    "In Tally but not in GSTR-2B",
+    "In GSTR-2B but not in Tally",
+    *VALUE_MISMATCH_CATEGORIES,
+    "Duplicate in Tally",
+    "Duplicate in GSTR-2B",
+)
+
+ALL_STATUSES = MATCHED_STATUSES + MISMATCH_CATEGORIES
+
 
 def make_key(gstin: str, invoice_no: str, party_name: str) -> tuple:
     return (gstin, invoice_no, party_name)
@@ -107,7 +130,15 @@ def match_rows(tally_rows: list[TallyRow], gst_rows: list[GstRow]) -> list[Match
                 best_diff = diff
 
         if best is not None:
-            append_pair_result(results, t, best)
+            exact_key = make_key(t.gstin, t.voucher_ref_no, t.particulars) == make_key(
+                best.gstin, best.invoice_no, best.trade_name
+            )
+            append_pair_result(
+                results,
+                t,
+                best,
+                base_status="Matched" if exact_key else "Matched (Amount Verified)",
+            )
             matched_tally.add(t.row_index)
             matched_gst.add(best.row_index)
 
@@ -194,36 +225,13 @@ def match_rows(tally_rows: list[TallyRow], gst_rows: list[GstRow]) -> list[Match
 
 
 def get_summary(results: list[MatchResult]) -> dict:
-    summary = {
-        "Matched": 0,
-        "Matched (Amount Verified)": 0,
-        "In Tally but not in GSTR-2B": 0,
-        "In GSTR-2B but not in Tally": 0,
-        "Invoice Value Mismatch": 0,
-        "Taxable Value Mismatch": 0,
-        "Integrated Tax Mismatch": 0,
-        "Central Tax Mismatch": 0,
-        "State/UT Tax Mismatch": 0,
-        "Duplicate in Tally": 0,
-        "Duplicate in GSTR-2B": 0,
-    }
+    summary = {status: 0 for status in ALL_STATUSES}
 
     for r in results:
-        if r.status == "Matched":
-            summary["Matched"] += 1
-        elif r.status == "Matched (Amount Verified)":
-            summary["Matched (Amount Verified)"] += 1
-        elif r.status == "In Tally but not in GSTR-2B":
-            summary["In Tally but not in GSTR-2B"] += 1
-        elif r.status == "In GSTR-2B but not in Tally":
-            summary["In GSTR-2B but not in Tally"] += 1
-        elif r.status == "Duplicate in Tally":
-            summary["Duplicate in Tally"] += 1
-        elif r.status == "Duplicate in GSTR-2B":
-            summary["Duplicate in GSTR-2B"] += 1
+        if r.status in summary:
+            summary[r.status] += 1
         else:
-            for cat in ["Invoice Value Mismatch", "Taxable Value Mismatch",
-                       "Integrated Tax Mismatch", "Central Tax Mismatch", "State/UT Tax Mismatch"]:
+            for cat in VALUE_MISMATCH_CATEGORIES:
                 if cat in r.status:
                     summary[cat] += 1
 

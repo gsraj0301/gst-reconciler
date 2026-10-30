@@ -2,11 +2,10 @@
 
 A desktop application for reconciling a **Tally Voucher Register** with **GSTR-2B** data downloaded from the Indian GST portal. It automatically flags mismatches (invoice value, taxable value, IGST/CGST/SGST) and exports a color‑coded reconciliation report that preserves all original sheets in the GSTR-2B file.
 
-| Badge | Description |
-|---|---|
-| Python 3.10+ | `![Python](https://img.shields.io/badge/python-3.10%2B-blue.svg) |
-| Tkinter GUI |  |
-| Platform | Windows 10/11 |
+[![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/downloads/)
+[![Tests](https://github.com/gsraj0301/gst-reconciler/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/gsraj0301/gst-reconciler/actions/workflows/test.yml)
+![Tkinter](https://img.shields.io/badge/GUI-Tkinter-2F5496)
+![Platform](https://img.shields.io/badge/platform-Windows%2010%2F11-lightgrey)
 
 ## What it does
 
@@ -14,14 +13,13 @@ Reconciles your internal **Tally voucher data** against the **GSTR‑2B** auto�
 
 ## Features
 
-- **Password‑protected login** — password configured via `GST_RECONCILER_PASSWORD` environment variable (set in `.env` before running; never hardcoded)
 - **Drag‑and‑drop file upload** for both Tally and GSTR-2B Excel files
 - **Three‑tier matching logic** (priority order):
-  1. **GSTIN + Amount** — same GSTIN and taxable value within ₹10 → Matched (tax‑head differences still flagged)
+  1. **GSTIN + Amount** — same GSTIN and taxable value within ₹10 → **Matched** when invoice number and party also match, otherwise **Matched (Amount Verified)**; tax‑head differences are still flagged
   2. **Exact 3‑key match** — `GSTIN + Invoice No + Party Name` → paired, differences flagged
   3. **Fallbacks** — duplicates, “in‑only” categories, and value‑only mismatches
-- **Seven mismatch categories**:
-  - Matched / Matched (Amount Verified)
+- **Matched statuses**: Matched / Matched (Amount Verified)
+- **Nine mismatch categories**:
   - In Tally only
   - In GSTR‑2B only
   - Invoice Value Mismatch (>₹10)
@@ -29,7 +27,8 @@ Reconciles your internal **Tally voucher data** against the **GSTR‑2B** auto�
   - Integrated Tax (IGST) Mismatch (>₹10)
   - Central Tax (CGST) Mismatch (>₹10)
   - State/UT Tax (SGST) Mismatch (>₹10)
-  - Duplicate in Tally / Duplicate in GSTR‑2B
+  - Duplicate in Tally
+  - Duplicate in GSTR‑2B
 - **Click any mismatch row** to view filtered details in a side‑by‑side comparison view
 - **Download report** — modified copy of the GSTR‑2B file with a new first sheet named **"Reconciliation Report"**, preserving all original sheets
 - **Handles 250MB+ files** (desktop app, no upload limits)
@@ -53,13 +52,12 @@ Reconciles your internal **Tally voucher data** against the **GSTR‑2B** auto�
 
 1. Download `GST-Reconciler.exe` from the **Releases** page
 2. Double‑click to run
-3. When launched, set the password via the environment variable (see *Security note* below)
 
 ### Option 2: From source
 
 ```bash
 # Clone the repo
-git clone https://github.com/your‑org/gst-reconciler.git
+git clone https://github.com/gsraj0301/gst-reconciler.git
 cd gst-reconciler
 
 # Create a virtual environment (recommended)
@@ -69,26 +67,28 @@ source .venv/bin/activate    # Windows: .venv\Scripts\activate
 # Install dependencies
 pip install -r requirements.txt
 
-# Set the password — create a .env file in the project root:
-#   echo GST_RECONCILER_PASSWORD=your_password > .env
-# Or export it before running:
-#   export GST_RECONCILER_PASSWORD=your_password_here
-
 # Launch the app
 python run.py
 ```
 
 ## Usage
 
-1. **Launch** the app (login screen appears)
-2. **Enter password** — the default is documented in `.env.example`; override via `GST_RECONCILER_PASSWORD` env var
-3. **Upload files** — either drag‑and‑drop an Excel file onto the card, or click **Browse**
+1. **Launch** the app — it opens directly on the upload screen
+2. **Upload files** — either drag‑and‑drop an Excel file onto the card, or click **Browse**
    - **Tally file** (.xlsx) — must contain a sheet named `CGST Input` (or `PURCHASE REGISTER`)
    - **GSTR‑2B file** (.xlsx) — must contain a sheet named `B2B` (the parser auto‑detects two‑row merged headers)
-4. Click **Start Reconciliation**
-5. **View results** — summary cards with counts per mismatch category
-6. **Double‑click any row** in the summary to open the detail view (shows full invoice data side‑by‑side)
-7. **Click "Download Report"** to save the reconciled GSTR‑2B file (original sheets kept intact)
+3. Click **Start Reconciliation**
+4. **View results** — summary table with counts per mismatch category
+5. **Double‑click any row** in the summary to open the detail view (shows full invoice data side‑by‑side)
+6. **Click "Download Report"** to save the reconciled GSTR‑2B file (original sheets kept intact)
+
+## Sample Reconciliation
+
+The [`sample/`](sample/) folder contains deterministic, fully synthetic files with no real taxpayer data. The sample covers both matched statuses and all nine mismatch categories; expected counts are in [`sample/expected_summary.json`](sample/expected_summary.json).
+
+![Reconciliation report preview](sample/reconciliation-report.png)
+
+Open [`sample/reconciliation-report.xlsx`](sample/reconciliation-report.xlsx) to inspect the full color‑coded report.
 
 ## File Format Requirements
 
@@ -108,7 +108,7 @@ python run.py
 
 | Tier | Rule |
 |---|---|
-| **Primary — GSTIN + Amount** | Same GSTIN AND taxable value within **₹10** → **Matched** (tax‑head differences still flagged) |
+| **Primary — GSTIN + Amount** | Same GSTIN AND taxable value within **₹10** → **Matched** if invoice number and party also match, otherwise **Matched (Amount Verified)** (tax‑head differences still flagged) |
 | **Secondary — Exact 3‑key match** | `clean(GSTIN) + clean(Invoice No) + clean(Party Name)` exact → paired, differences flagged |
 | **Fallbacks** | Same key as already‑matched entry → “Duplicate in Tally” / “Duplicate in GSTR‑2B” |
 | | GSTIN exists in the other file but nothing aligned → “Invoice Value Mismatch; Taxable Value Mismatch” |
