@@ -53,9 +53,9 @@
 
 - [x] Add `GST-Reconciler.spec`.
 - [x] Add a Windows release workflow triggered by `v*` tags.
-- [ ] Build `GST-Reconciler.exe`.
-- [ ] Tag `v1.0.0` and write 3–4 lines of release notes.
-- [ ] Attach the executable and link the release from the README.
+- [x] Build `GST-Reconciler.exe`.
+- [x] Tag `v1.0.0` and write 3–4 lines of release notes.
+- [x] Attach the executable and link the release from the README.
 
 ### GPexp
 

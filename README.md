@@ -4,6 +4,7 @@ A desktop application for reconciling a **Tally Voucher Register** with **GSTR-2
 
 [![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/downloads/)
 [![Tests](https://github.com/gsraj0301/gst-reconciler/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/gsraj0301/gst-reconciler/actions/workflows/test.yml)
+[![Release](https://img.shields.io/github/v/release/gsraj0301/gst-reconciler?label=release)](https://github.com/gsraj0301/gst-reconciler/releases/latest)
 ![Tkinter](https://img.shields.io/badge/GUI-Tkinter-2F5496)
 ![Platform](https://img.shields.io/badge/platform-Windows%2010%2F11-lightgrey)
 
@@ -50,7 +51,7 @@ Reconciles your internal **Tally voucher data** against the **GSTR‑2B** auto�
 
 ### Option 1: Pre‑built executable (recommended)
 
-1. Download `GST-Reconciler.exe` from the **Releases** page
+1. Download [`GST-Reconciler.exe`](https://github.com/gsraj0301/gst-reconciler/releases/download/v1.0.0/GST-Reconciler.exe) from the [v1.0.0 release](https://github.com/gsraj0301/gst-reconciler/releases/tag/v1.0.0)
 2. Double‑click to run
 
 ### Option 2: From source
