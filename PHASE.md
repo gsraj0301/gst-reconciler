@@ -59,9 +59,9 @@
 
 ### GPexp
 
-- [ ] Build or download the APK from GitHub Actions.
-- [ ] Tag `v1.0.0` and write 3–4 lines of release notes.
-- [ ] Attach the APK and link the release from the README.
+- [x] Build or download the APK from GitHub Actions.
+- [x] Tag `v1.0.0` and write 3–4 lines of release notes.
+- [x] Attach the APK and link the release from the README.
 
 ## Phase 5 — Verification
 
@@ -69,5 +69,5 @@
 - [x] Launch the GUI and confirm it opens directly to upload.
 - [x] Run the sample reconciliation and verify the expected summary.
 - [x] Verify the screenshot contains no real data.
-- [ ] Verify both releases and their assets.
-- [ ] Run `git diff --check` and commit the changes.
+- [x] Verify both releases and their assets.
+- [x] Run `git diff --check` and commit the changes.
